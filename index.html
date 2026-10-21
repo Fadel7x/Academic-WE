@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Vocab Master | Elevate Your University Essays</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f3ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#1e1b4b',
+                        },
+                        darkbg: '#0f172a',
+                        cardbg: '#1e293b',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tone.js for web audio sound effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white custom-scrollbar">
+
+    <!-- TOP NAVBAR -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="app.resetToHome()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid font-bold fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold bg-gradient-to-r from-indigo-400 to-violet-300 bg-clip-text text-transparent">
+                        AcademiaVocab
+                    </h1>
+                    <p class="text-xs text-slate-400 font-medium">B2/C1/C2 University Mastery</p>
+                </div>
+            </div>
+
+            <!-- Header Action Buttons -->
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <!-- Essay Blueprint Drawer Toggle Button -->
+                <button onclick="app.toggleBlueprintModal(true)" class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold bg-indigo-950/60 text-indigo-300 border border-indigo-700/50 hover:bg-indigo-900/80 transition flex items-center space-x-2 shadow-sm">
+                    <i class="fa-solid fa-book-open text-indigo-400"></i>
+                    <span class="hidden sm:inline">Essay Blueprint</span>
+                </button>
+
+                <!-- Review Queue Modal Toggle -->
+                <button onclick="app.toggleReviewModal(true)" class="relative px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition flex items-center space-x-2">
+                    <i class="fa-solid fa-bookmark text-amber-400"></i>
+                    <span>Review List</span>
+                    <span id="review-count-badge" class="bg-amber-500 text-slate-950 text-xs font-bold px-1.5 py-0.5 rounded-full ml-1">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-5xl mx-auto px-4 py-6 sm:py-8 w-full flex-grow">
+        
+        <!-- DASHBOARD STATS BAR -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
+            <div class="bg-slate-800/60 border border-slate-800 rounded-xl p-3 sm:p-4 flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-400 font-medium">Streak</div>
+                    <div class="text-lg sm:text-xl font-bold text-slate-100" id="stat-streak">0</div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/60 border border-slate-800 rounded-xl p-3 sm:p-4 flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-400 font-medium">Accuracy</div>
+                    <div class="text-lg sm:text-xl font-bold text-slate-100" id="stat-accuracy">0%</div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/60 border border-slate-800 rounded-xl p-3 sm:p-4 flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-violet-500/10 text-violet-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-check-double"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-400 font-medium">Mastered</div>
+                    <div class="text-lg sm:text-xl font-bold text-slate-100" id="stat-mastered">0</div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/60 border border-slate-800 rounded-xl p-3 sm:p-4 flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-400 font-medium">Score</div>
+                    <div class="text-lg sm:text-xl font-bold text-slate-100" id="stat-score">0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTROLS & FILTER BAR -->
+        <section class="bg-slate-800/40 border border-slate-800 rounded-2xl p-4 mb-6 shadow-md backdrop-blur">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                
+                <!-- Mode Toggle Switches -->
+                <div class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-700/60 w-full md:w-auto">
+                    <button id="mode-btn-fill" onclick="app.setMode('fill')" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center justify-center space-x-2 bg-indigo-600 text-white shadow">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>Sentence Fill</span>
+                    </button>
+                    <button id="mode-btn-upgrade" onclick="app.setMode('upgrade')" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center justify-center space-x-2 text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Word Upgrade Mode</span>
+                    </button>
+                </div>
+
+                <!-- Category Filters Dropdown -->
+                <div class="flex items-center space-x-2 w-full md:w-auto">
+                    <label for="category-select" class="text-xs font-semibold text-slate-400 whitespace-nowrap">
+                        <i class="fa-solid fa-filter mr-1"></i> Category:
+                    </label>
+                    <select id="category-select" onchange="app.setCategory(this.value)" class="w-full md:w-auto bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer">
+                        <option value="All">All Categories</option>
+                        <option value="Academic Connectors & Transitions">Academic Connectors & Transitions</option>
+                        <option value="Academic Verbs">Academic Verbs</option>
+                        <option value="Essay & Argumentation">Essay & Argumentation</option>
+                        <option value="Formal Vocabulary">Formal Vocabulary</option>
+                    </select>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- QUESTION CARD CONTAINER -->
+        <div id="question-card" class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden transition-all duration-300">
+            
+            <!-- Top Card Indicators -->
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-700/60">
+                <div class="flex items-center space-x-2">
+                    <span id="badge-category" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                        Category
+                    </span>
+                    <span id="badge-level" class="px-2.5 py-1 rounded-md text-xs font-bold bg-violet-500/10 text-violet-300 border border-violet-500/20">
+                        CEFR
+                    </span>
+                </div>
+                
+                <div class="flex items-center space-x-3 text-xs text-slate-400">
+                    <span id="attempts-left" class="font-medium text-amber-400">Attempts left: 3</span>
+                    <button onclick="app.toggleBookmarkCurrentWord()" id="btn-bookmark" title="Save to Review Queue" class="text-slate-400 hover:text-amber-400 text-lg transition">
+                        <i class="fa-regular fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Instructions Banner -->
+            <div id="instruction-text" class="text-xs font-semibold tracking-wider text-indigo-400 uppercase mb-3">
+                Select the most appropriate academic word to complete the sentence:
+            </div>
+
+            <!-- Main Question Sentence Block -->
+            <div id="sentence-box" class="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed text-slate-100 mb-8 bg-slate-900/50 p-5 sm:p-6 rounded-xl border border-slate-700/50">
+                Loading question...
+            </div>
+
+            <!-- 6 Options Grid -->
+            <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 mb-6">
+                <!-- Options will be generated dynamically -->
+            </div>
+
+            <!-- Action Controls below Options -->
+            <div class="flex items-center justify-between pt-2">
+                <button id="btn-hint" onclick="app.showHint()" class="px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-400 bg-slate-900/60 hover:bg-slate-900 hover:text-slate-200 transition border border-slate-700 flex items-center space-x-1.5">
+                    <i class="fa-regular fa-lightbulb text-amber-400"></i>
+                    <span>Show Hint</span>
+                </button>
+
+                <button id="btn-next" onclick="app.nextQuestion()" class="hidden px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-600/30 transition flex items-center space-x-2">
+                    <span>Next Question</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- DETAILED ACADEMIC BREAKDOWN PANEL (Revealed on Correct Answer or Revealed Solution) -->
+            <div id="explanation-panel" class="hidden mt-6 pt-6 border-t border-slate-700/80 space-y-4">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <div class="flex items-center space-x-3">
+                            <h3 id="target-word-title" class="text-2xl font-bold text-emerald-400 capitalize">Word</h3>
+                            <span id="target-word-pos" class="text-xs italic text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-700">noun</span>
+                        </div>
+                        <p id="target-definition" class="text-sm sm:text-base text-slate-200 mt-1 font-medium">Definition goes here...</p>
+                    </div>
+                </div>
+
+                <!-- Three Context Examples -->
+                <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-700/60 space-y-2">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1">
+                        <i class="fa-solid fa-quote-left text-indigo-400"></i>
+                        <span>3 University Exam Examples:</span>
+                    </div>
+                    <ul id="target-examples" class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc list-inside">
+                        <!-- Examples inserted dynamically -->
+                    </ul>
+                </div>
+
+                <!-- Essay Usage Strategy Tip -->
+                <div class="bg-gradient-to-r from-indigo-950/80 to-slate-900 p-4 rounded-xl border border-indigo-800/40">
+                    <div class="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center space-x-1.5 mb-1">
+                        <i class="fa-solid fa-feather-pointed text-amber-400"></i>
+                        <span>How to Use in an Essay:</span>
+                    </div>
+                    <p id="target-essay-tip" class="text-xs sm:text-sm text-slate-300 italic">
+                        Essay tip goes here...
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-800 py-4 mt-8 bg-slate-950 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div>
+                AcademiaVocab &copy; B2/C1 Academic Vocabulary Mastery Platform
+            </div>
+            <div class="flex items-center space-x-4 text-slate-400">
+                <span>Designed for University Essays & Exams</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: MY REVIEW LIST (SPACED REPETITION QUEUE) -->
+    <div id="modal-review" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl">
+            <!-- Modal Header -->
+            <div class="p-5 border-b border-slate-700 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-bookmark text-amber-400 text-lg"></i>
+                    <h2 class="text-lg font-bold text-slate-100">My Review Queue</h2>
+                </div>
+                <button onclick="app.toggleReviewModal(false)" class="text-slate-400 hover:text-white text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-5 overflow-y-auto custom-scrollbar flex-grow space-y-3" id="review-list-container">
+                <!-- Bookmarked item cards generated dynamically -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-slate-700 bg-slate-900/60 rounded-b-2xl flex justify-between items-center text-xs text-slate-400">
+                <span>Review these words regularly to turn them into Active Vocabulary.</span>
+                <button onclick="app.clearReviewQueue()" class="text-rose-400 hover:text-rose-300 text-xs font-semibold px-2 py-1 bg-rose-500/10 rounded border border-rose-500/20">
+                    Clear List
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: ESSAY VOCABULARY BLUEPRINT & BRAINSTORMING WIDGET -->
+    <div id="modal-blueprint" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl">
+            <!-- Modal Header -->
+            <div class="p-5 border-b border-slate-700 flex items-center justify-between bg-gradient-to-r from-slate-900 to-indigo-950 rounded-t-2xl">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-100">Essay Vocabulary Blueprint</h2>
+                        <p class="text-xs text-indigo-300">Quick cheat-sheet to use during university essay brainstorming</p>
+                    </div>
+                </div>
+                <button onclick="app.toggleBlueprintModal(false)" class="text-slate-400 hover:text-white text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content: Categorized Blueprint Accordion/Tabs -->
+            <div class="p-5 overflow-y-auto custom-scrollbar flex-grow space-y-6 text-xs sm:text-sm">
+                
+                <!-- Section 1: Introduction & Thesis Statement -->
+                <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700">
+                    <h3 class="font-bold text-indigo-400 text-base mb-2 flex items-center space-x-2">
+                        <i class="fa-solid fa-play text-xs"></i>
+                        <span>1. Essay Introduction & Thesis Framing</span>
+                    </h3>
+                    <p class="text-slate-400 mb-3 text-xs">Use these verbs and phrases to establish the context and state your main line of argument.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                            <span class="font-bold text-indigo-300">Delineate:</span> <span class="text-slate-300">To outline or describe precisely.</span>
+                            <div class="text-xs text-slate-400 italic mt-1">"This essay delineates the key socio-economic factors..."</div>
+                        </div>
+                        <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                            <span class="font-bold text-indigo-300">Premise:</span> <span class="text-slate-300">An underlying assumption.</span>
+                            <div class="text-xs text-slate-400 italic mt-1">"Based on the premise that global temperatures rise..."</div>
+                        </div>
+                        <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                            <span class="font-bold text-indigo-300">Imperative:</span> <span class="text-slate-300">Crucial or vital necessity.</span>
+                            <div class="text-xs text-slate-400 italic mt-1">"It is imperative to examine the policy implications..."</div>
+                        </div>
+                        <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                            <span class="font-bold text-indigo-300">Elucidate:</span> <span class="text-slate-300">To make clear / explain.</span>
+                            <div class="text-xs text-slate-400 italic mt-1">"The objective is to elucidate the mechanisms behind..."</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Body Paragraphs & Evidence -->
+                <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700">
+                    <h3 class="font-bold text-emerald-400 text-base mb-2 flex items-center space-x-2">
+                        <i class="fa-solid fa-layer-group text-xs"></i>
+                        <span>2. Supporting Claims & Evidence</span>
+                    </h3>
+                    <p class="text-slate-400 mb-3 text-xs">Phrases to present data, research findings, and reinforce your arguments.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                            <span class="font-bold text-emerald-300">Substantiate:</span> <span class="text-slate-300">To prove or support with evidence.</span>
+                            <div class="text-xs text-slate-400 italic mt-1">"Empirical data substantiates this hypothesis..."</div>
+                        </div>
+                        <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                            <span class="font-bold text-emerald-300">Corroborate:</span> <span class="text-slate-300">To confirm or strengthen a finding.</span>
+                            <div class="text-xs text-slate-400 italic mt-1">"Recent studies corroborate earlier findings..."</div>
+                        </div>
+                        <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                            <span class="font-bold text-emerald-300">Facilitate:</span> <span class="text-slate-300">To make an action or process easier.</span>
+                            <div class="text-xs text-slate-400 italic mt-1">"Targeted investments facilitate economic growth..."</div>
+                        </div>
+                        <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                            <span class="font-bold text-emerald-300">Exemplify:</span> <span class="text-slate-300">To serve as a typical example.</span>
+                            <div class="text-xs text-slate-400 italic mt-1">"This case study exemplifies the broader trend..."</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Counterarguments & Contrast -->
+                <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700">
+                    <h3 class="font-bold text-amber-400 text-base mb-2 flex items-center space-x-2">
+                        <i class="fa-solid fa-arrows-left-right text-xs"></i>
+                        <span>3. Counterarguments & Transitions</span>
+                    </h3>
+                    <p class="text-slate-400 mb-3 text-xs">Introduce opposing perspectives and transition smoothly between points.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                            <span class="font-bold text-amber-300">Conversely:</span> <span class="text-slate-300">In contrast / on the other hand.</span>
+                            <div class="text-xs text-slate-400 italic mt-1">"Conversely, critics argue that the costs outweigh..."</div>
+                        </div>
+                        <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                            <span class="font-bold text-amber-300">Notwithstanding:</span> <span class="text-slate-300">In spite of / despite.</span>
+                            <div class="text-xs text-slate-400 italic mt-1">"Notwithstanding these challenges, progress persists..."</div>
+                        </div>
+                        <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                            <span class="font-bold text-amber-300">Paradoxically:</span> <span class="text-slate-300">In a contradictory manner.</span>
+                            <div class="text-xs text-slate-400 italic mt-1">"Paradoxically, increased security led to anxiety..."</div>
+                        </div>
+                        <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                            <span class="font-bold text-amber-300">Advocate:</span> <span class="text-slate-300">To publicly recommend or support.</span>
+                            <div class="text-xs text-slate-400 italic mt-1">"Scholars advocate for immediate institutional reform..."</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        // --- RICH ACADEMIC VOCABULARY DATABASE (B2 / C1 / C2 LEVEL) ---
+        const ACADEMIC_DATABASE = [
+            {
+                id: "w1",
+                word: "substantiate",
+                pos: "verb",
+                level: "C1",
+                category: "Academic Verbs",
+                fillSentence: "The researcher provided empirical data to _______ her claim during the university symposium.",
+                upgradeSentence: "The author provided enough evidence to [back up] her argument in the paper.",
+                basicWord: "back up",
+                distractors: ["delineate", "evade", "distort", "fluctuate", "alleviate"],
+                definition: "To provide evidence to support or prove the truth of something.",
+                examples: [
+                    "The findings are substantiated by recent clinical trials.",
+                    "Without concrete evidence, it is difficult to substantiate this theory.",
+                    "Researchers must substantiate all statements made in university dissertations."
+                ],
+                essayTip: "Use 'substantiate' in your body paragraphs when referring to how studies, statistics, or quotes support your thesis."
+            },
+            {
+                id: "w2",
+                word: "furthermore",
+                pos: "adverb",
+                level: "B2",
+                category: "Academic Connectors & Transitions",
+                fillSentence: "The proposed policy is economically viable; _______, it addresses long-standing environmental concerns.",
+                upgradeSentence: "The method is cost-effective. [Also], it reduces execution time significantly.",
+                basicWord: "Also",
+                distractors: ["conversely", "nevertheless", "consequently", "whereas", "nonetheless"],
+                definition: "In addition; used to introduce a fresh point that reinforces the previous one.",
+                examples: [
+                    "Furthermore, the analysis revealed a strong correlation between education and income.",
+                    "The property is in bad condition; furthermore, the price is exorbitant.",
+                    "He was tired; furthermore, he had a severe headache."
+                ],
+                essayTip: "Use 'furthermore' at the beginning of a sentence to add an additional supporting point in body paragraphs."
+            },
+            {
+                id: "w3",
+                word: "conversely",
+                pos: "adverb",
+                level: "C1",
+                category: "Academic Connectors & Transitions",
+                fillSentence: "Some students thrive in group discussions; _______, introverted learners often prefer independent study.",
+                upgradeSentence: "High inflation harms consumers; [on the other hand], low inflation stimulates spending.",
+                basicWord: "on the other hand",
+                distractors: ["furthermore", "hence", "accordingly", "thereby", "similarly"],
+                definition: "In an opposite way; used to introduce a statement that contrasts with a previous one.",
+                examples: [
+                    "Northern regions experienced heavy rain; conversely, the south suffered severe drought.",
+                    "You can send the message by post or, conversely, contact them via email.",
+                    "Building extra roads may ease traffic; conversely, it can encourage more car usage."
+                ],
+                essayTip: "Ideal for introducing counterarguments or contrasting two scholarly perspectives in an essay."
+            },
+            {
+                id: "w4",
+                word: "elucidate",
+                pos: "verb",
+                level: "C2",
+                category: "Academic Verbs",
+                fillSentence: "The professor's lecture helped to _______ the complex philosophical concepts that baffled the students.",
+                upgradeSentence: "The purpose of this article is to [explain] the factors driving economic inflation.",
+                basicWord: "explain",
+                distractors: ["obscure", "substantiate", "complicate", "curtail", "mitigate"],
+                definition: "To make something clear; to explain thoroughly.",
+                examples: [
+                    "Further research is required to elucidate the exact mechanism of the disease.",
+                    "The study aims to elucidate how social media impacts youth political engagement.",
+                    "She gave a brilliant presentation that elucidated key historical developments."
+                ],
+                essayTip: "Great for introduction paragraphs when stating the purpose of your essay (e.g., 'This paper seeks to elucidate...')."
+            },
+            {
+                id: "w5",
+                word: "facilitate",
+                pos: "verb",
+                level: "B2",
+                category: "Academic Verbs",
+                fillSentence: "Modern digital tools can greatly _______ collaboration among international research teams.",
+                upgradeSentence: "Interactive software can [make easier] the learning process for university freshmen.",
+                basicWord: "make easier",
+                distractors: ["hinder", "impede", "substantiate", "delineate", "prohibit"],
+                definition: "To make an action or process easier or smoother.",
+                examples: [
+                    "The new agreement will facilitate trade between the two nations.",
+                    "Structured seminars facilitate deeper critical thinking among students.",
+                    "Adequate funding is essential to facilitate scientific innovation."
+                ],
+                essayTip: "Use when describing how policies, solutions, or methods assist in achieving positive outcomes."
+            },
+            {
+                id: "w6",
+                word: "notwithstanding",
+                pos: "preposition",
+                level: "C1",
+                category: "Academic Connectors & Transitions",
+                fillSentence: "_______ the initial methodology flaws, the final outcome of the study provided valuable insights.",
+                upgradeSentence: "[In spite of] the high financial cost, the university expanded its research facilities.",
+                basicWord: "In spite of",
+                distractors: ["consequently", "furthermore", "hence", "therefore", "accordingly"],
+                definition: "In spite of; despite.",
+                examples: [
+                    "Notwithstanding the rain, the field experiment proceeded as scheduled.",
+                    "His importance to the department was undeniable, notwithstanding his occasional absence.",
+                    "Notwithstanding previous failures, the team attempted a new synthesis."
+                ],
+                essayTip: "Use in thesis statements or counterargument paragraphs to show nuance and concede minor points gracefully."
+            },
+            {
+                id: "w7",
+                word: "delineate",
+                pos: "verb",
+                level: "C1",
+                category: "Academic Verbs",
+                fillSentence: "The treaty clearly _______ the international boundaries between the two neighboring sovereign states.",
+                upgradeSentence: "The introductory chapter will [outline] the scope and limitations of the project.",
+                basicWord: "outline",
+                distractors: ["substantiate", "confuse", "obscure", "fluctuate", "amalgamate"],
+                definition: "To describe or portray precisely; to indicate the exact position of a border or boundary.",
+                examples: [
+                    "The document delineates the responsibilities of each faculty department.",
+                    "Artists use light and shadow to delineate form and depth.",
+                    "It is important to clearly delineate between correlation and causation."
+                ],
+                essayTip: "Excellent in essay introductions to explain how your argument will be structured or divided into sections."
+            },
+            {
+                id: "w8",
+                word: "imperative",
+                pos: "adjective",
+                level: "C1",
+                category: "Formal Vocabulary",
+                fillSentence: "It is _______ that academic institutions adopt rigorous peer-review standards to ensure credibility.",
+                upgradeSentence: "It is [very important] that researchers maintain complete objectivity.",
+                basicWord: "very important",
+                distractors: ["optional", "trivial", "superfluous", "redundant", "marginal"],
+                definition: "Of vital importance; crucial and mandatory.",
+                examples: [
+                    "Immediate action is imperative to prevent further ecological damage.",
+                    "It is imperative that students understand academic integrity rules.",
+                    "Clear communication is an imperative component of effective leadership."
+                ],
+                essayTip: "Use in conclusion paragraphs when proposing urgent recommendations or highlighting major significance."
+            },
+            {
+                id: "w9",
+                word: "corroborate",
+                pos: "verb",
+                level: "C2",
+                category: "Essay & Argumentation",
+                fillSentence: "Multiple independent witness accounts helped to _______ the investigator's findings.",
+                upgradeSentence: "The new survey results [confirm] the findings of earlier sociological studies.",
+                basicWord: "confirm",
+                distractors: ["contradict", "undermine", "refute", "delineate", "mitigate"],
+                definition: "To confirm or give support to a statement, theory, or finding.",
+                examples: [
+                    "Recent archaeological discoveries corroborate the ancient written records.",
+                    "The witness was unable to corroborate the defendant's alibi.",
+                    "Experimental results corroborated the mathematical model."
+                ],
+                essayTip: "Use when integrating secondary sources that agree with each other or with your main thesis."
+            },
+            {
+                id: "w10",
+                word: "premise",
+                pos: "noun",
+                level: "C1",
+                category: "Essay & Argumentation",
+                fillSentence: "The entire argument rests on the false _______ that economic growth automatically reduces poverty.",
+                upgradeSentence: "The study is based on the [basic idea] that climate change affects all regions equally.",
+                basicWord: "basic idea",
+                distractors: ["outcome", "consequence", "epilogue", "substantiation", "paradox"],
+                definition: "A previous statement or proposition from which another is inferred or follows as a conclusion.",
+                examples: [
+                    "If the initial premise is flawed, the entire conclusion will be invalid.",
+                    "The hypothesis was built upon a sound scientific premise.",
+                    "We accepted the premise that all participants were entitled to privacy."
+                ],
+                essayTip: "Essential when evaluating logic, theoretical frameworks, or critically analyzing another author's essay."
+            },
+            {
+                id: "w11",
+                word: "paradigm",
+                pos: "noun",
+                level: "C2",
+                category: "Formal Vocabulary",
+                fillSentence: "The discovery of quantum mechanics triggered a major _______ shift in modern physics.",
+                upgradeSentence: "The study introduced a new [model] for understanding human cognitive development.",
+                basicWord: "model",
+                distractors: ["anomaly", "flaw", "deviation", "impediment", "transition"],
+                definition: "A typical pattern, model, or conceptual framework accepted by a community.",
+                examples: [
+                    "The academic world experienced a paradigm shift following the digital revolution.",
+                    "This study provides a new paradigm for analyzing international relations.",
+                    "Her research challenged the dominant economic paradigm of the late 20th century."
+                ],
+                essayTip: "Use when discussing fundamental shifts in scientific, cultural, or theoretical frameworks."
+            },
+            {
+                id: "w12",
+                word: "advocate",
+                pos: "verb",
+                level: "B2",
+                category: "Essay & Argumentation",
+                fillSentence: "Many contemporary sociologists _______ for structural reforms in the criminal justice system.",
+                upgradeSentence: "Environmental groups [strongly support] stricter regulations on carbon emissions.",
+                basicWord: "strongly support",
+                distractors: ["oppose", "dismiss", "delineate", "curtail", "relinquish"],
+                definition: "To publicly recommend, support, or urge a particular policy or cause.",
+                examples: [
+                    "The author advocates a balanced approach to renewable energy adoption.",
+                    "Human rights organizations advocate for transparent legal processes.",
+                    "Scholars advocate integrating technology into early childhood education."
+                ],
+                essayTip: "Use when stating your position or explaining what other authors or scholars recommend."
+            },
+            {
+                id: "w13",
+                word: "alleviate",
+                pos: "verb",
+                level: "C1",
+                category: "Academic Verbs",
+                fillSentence: "Targeted economic subsidies can help _______ the financial burdens faced by low-income families.",
+                upgradeSentence: "New medical treatments aim to [lessen] pain without severe side effects.",
+                basicWord: "lessen",
+                distractors: ["exacerbate", "aggravate", "substantiate", "delineate", "heighten"],
+                definition: "To make suffering, deficiency, or a problem less severe or more bearable.",
+                examples: [
+                    "Measures were implemented to alleviate traffic congestion in the city center.",
+                    "International aid helped alleviate the severe food shortage.",
+                    "Proper ergonomics can alleviate physical stress during long study sessions."
+                ],
+                essayTip: "Ideal for problem-solution essay structures when detailing how solutions minimize negative impacts."
+            },
+            {
+                id: "w14",
+                word: "exacerbate",
+                pos: "verb",
+                level: "C2",
+                category: "Academic Verbs",
+                fillSentence: "Delaying critical structural repairs will only _______ the overall cost of the university renovation.",
+                upgradeSentence: "Ignoring public health guidelines will [make worse] the spread of disease.",
+                basicWord: "make worse",
+                distractors: ["alleviate", "mitigate", "facilitate", "substantiate", "mollify"],
+                definition: "To make a problem, bad situation, or negative feeling worse or more intense.",
+                examples: [
+                    "Rising interest rates could exacerbate the existing housing crisis.",
+                    "Stress can exacerbate symptoms of chronic physical illness.",
+                    "Aggressive political rhetoric only serves to exacerbate societal division."
+                ],
+                essayTip: "Use when explaining the negative consequences of an action, policy, or negligence."
+            },
+            {
+                id: "w15",
+                word: "consequently",
+                pos: "adverb",
+                level: "B2",
+                category: "Academic Connectors & Transitions",
+                fillSentence: "The university cut research funding; _______, several high-profile projects were suspended.",
+                upgradeSentence: "The country experienced a severe drought; [as a result], crop yields dropped by 40%.",
+                basicWord: "as a result",
+                distractors: ["conversely", "notwithstanding", "similarly", "whereas", "furthermore"],
+                definition: "As a result or effect of something previously mentioned.",
+                examples: [
+                    "The trial produced inconsistent data; consequently, the paper was rejected.",
+                    "Inflation rose sharply; consequently, consumer spending plummeted.",
+                    "She studied diligently; consequently, she graduated top of her class."
+                ],
+                essayTip: "Use to articulate cause-and-effect relationships clearly in analytical paragraphs."
+            }
+        ];
+
+        // --- APP STATE MANAGEMENT ---
+        class VocabApp {
+            constructor() {
+                this.mode = 'fill'; // 'fill' or 'upgrade'
+                this.category = 'All';
+                this.currentIndex = 0;
+                this.filteredQuestions = [];
+                this.currentQuestion = null;
+                this.attemptsLeft = 3;
+                this.userAnswered = false;
+                this.selectedOption = null;
+
+                // Stats & Storage
+                this.score = 0;
+                this.streak = 0;
+                this.totalAttempted = 0;
+                this.totalCorrect = 0;
+                this.masteredWords = new Set();
+                this.reviewQueue = new Set();
+
+                // Audio Context initialized on user interaction
+                this.synth = null;
+
+                this.loadFromLocalStorage();
+            }
+
+            init() {
+                this.filterQuestions();
+                this.updateStatsUI();
+                this.renderQuestion();
+                this.initAudio();
+            }
+
+            initAudio() {
+                try {
+                    // Pre-initialize Tone.js synth for sound effects
+                    this.synth = new Tone.Synth().toDestination();
+                } catch(e) {
+                    console.log('Audio init delayed');
+                }
+            }
+
+            playSound(type) {
+                try {
+                    if (Tone && Tone.context.state !== 'running') {
+                        Tone.start();
+                    }
+                    if (!this.synth) this.synth = new Tone.Synth().toDestination();
+
+                    if (type === 'correct') {
+                        this.synth.triggerAttackRelease("C5", "8n", Tone.now());
+                        this.synth.triggerAttackRelease("G5", "8n", Tone.now() + 0.15);
+                    } else if (type === 'wrong') {
+                        this.synth.triggerAttackRelease("F3", "8n", Tone.now());
+                    }
+                } catch (e) {
+                    // Silent fallback if audio blocked
+                }
+            }
+
+            filterQuestions() {
+                if (this.category === 'All') {
+                    this.filteredQuestions = [...ACADEMIC_DATABASE];
+                } else {
+                    this.filteredQuestions = ACADEMIC_DATABASE.filter(q => q.category === this.category);
+                }
+                // Shuffle array
+                this.filteredQuestions.sort(() => Math.random() - 0.5);
+                this.currentIndex = 0;
+            }
+
+            setMode(mode) {
+                this.mode = mode;
+                
+                // UI button styling
+                const fillBtn = document.getElementById('mode-btn-fill');
+                const upgradeBtn = document.getElementById('mode-btn-upgrade');
+
+                if (mode === 'fill') {
+                    fillBtn.className = "flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center justify-center space-x-2 bg-indigo-600 text-white shadow";
+                    upgradeBtn.className = "flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center justify-center space-x-2 text-slate-400 hover:text-white";
+                    document.getElementById('instruction-text').textContent = "Select the most appropriate academic word to complete the sentence:";
+                } else {
+                    upgradeBtn.className = "flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center justify-center space-x-2 bg-indigo-600 text-white shadow";
+                    fillBtn.className = "flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center justify-center space-x-2 text-slate-400 hover:text-white";
+                    document.getElementById('instruction-text').textContent = "Replace the basic word in brackets [ ] with an academic B2/C1/C2 upgrade:";
+                }
+
+                this.renderQuestion();
+            }
+
+            setCategory(cat) {
+                this.category = cat;
+                this.filterQuestions();
+                this.renderQuestion();
+            }
+
+            renderQuestion() {
+                if (this.filteredQuestions.length === 0) {
+                    document.getElementById('sentence-box').textContent = "No questions found in this category.";
+                    return;
+                }
+
+                this.currentQuestion = this.filteredQuestions[this.currentIndex];
+                this.attemptsLeft = 3;
+                this.userAnswered = false;
+                this.selectedOption = null;
+
+                // UI Elements Reset
+                document.getElementById('explanation-panel').classList.add('hidden');
+                document.getElementById('btn-next').classList.add('hidden');
+                document.getElementById('btn-hint').classList.remove('hidden');
+                document.getElementById('attempts-left').textContent = `Attempts left: ${this.attemptsLeft}`;
+                document.getElementById('attempts-left').className = "font-medium text-amber-400";
+
+                // Badges
+                document.getElementById('badge-category').textContent = this.currentQuestion.category;
+                document.getElementById('badge-level').textContent = `CEFR ${this.currentQuestion.level}`;
+
+                // Bookmark icon state
+                const isBookmarked = this.reviewQueue.has(this.currentQuestion.id);
+                document.getElementById('btn-bookmark').innerHTML = isBookmarked ? 
+                    '<i class="fa-solid fa-bookmark text-amber-400"></i>' : 
+                    '<i class="fa-regular fa-bookmark"></i>';
+
+                // Sentence formatting based on Mode
+                const sentenceBox = document.getElementById('sentence-box');
+                if (this.mode === 'fill') {
+                    const formatted = this.currentQuestion.fillSentence.replace('_______', '<span class="px-3 py-1 bg-indigo-950 text-indigo-300 border-b-2 border-indigo-500 rounded font-bold">_______</span>');
+                    sentenceBox.innerHTML = formatted;
+                } else {
+                    const formatted = this.currentQuestion.upgradeSentence.replace(`[${this.currentQuestion.basicWord}]`, `<span class="px-2 py-0.5 bg-amber-950/80 text-amber-300 border border-amber-600/50 rounded font-bold">[${this.currentQuestion.basicWord}]</span>`);
+                    sentenceBox.innerHTML = formatted;
+                }
+
+                // Prepare 6 Options (Target word + 5 distractors)
+                let options = [this.currentQuestion.word, ...this.currentQuestion.distractors];
+                // Ensure unique and 6 items
+                options = Array.from(new Set(options)).slice(0, 6);
+                options.sort(() => Math.random() - 0.5);
+
+                const grid = document.getElementById('options-grid');
+                grid.innerHTML = '';
+
+                options.forEach((optionText, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "option-btn w-full p-4 rounded-xl text-left text-sm sm:text-base font-semibold bg-slate-900/80 hover:bg-slate-700/80 text-slate-200 border border-slate-700/80 transition flex items-center justify-between group cursor-pointer shadow-sm";
+                    btn.dataset.word = optionText;
+                    btn.onclick = () => this.handleOptionSelect(btn, optionText);
+
+                    btn.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-xs flex items-center justify-center font-mono group-hover:border-indigo-500 group-hover:text-indigo-400">${String.fromCharCode(65 + idx)}</span>
+                            <span>${optionText}</span>
+                        </div>
+                        <i class="fa-regular fa-circle text-slate-600 group-hover:text-slate-400"></i>
+                    `;
+                    grid.appendChild(btn);
+                });
+            }
+
+            handleOptionSelect(buttonEl, selectedWord) {
+                if (this.userAnswered) return;
+
+                const isCorrect = (selectedWord === this.currentQuestion.word);
+
+                if (isCorrect) {
+                    this.playSound('correct');
+                    this.userAnswered = true;
+                    
+                    // Style Button Correct
+                    buttonEl.className = "w-full p-4 rounded-xl text-left text-sm sm:text-base font-semibold bg-emerald-950/80 text-emerald-200 border-2 border-emerald-500 transition flex items-center justify-between shadow-lg shadow-emerald-950/50";
+                    buttonEl.querySelector('i').className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+
+                    // Stats Update
+                    this.score += (this.attemptsLeft * 10);
+                    this.streak++;
+                    this.totalAttempted++;
+                    this.totalCorrect++;
+                    this.masteredWords.add(this.currentQuestion.id);
+
+                    this.showExplanation();
+                    this.updateStatsUI();
+                    this.saveToLocalStorage();
+
+                    document.getElementById('btn-next').classList.remove('hidden');
+
+                } else {
+                    this.playSound('wrong');
+                    this.attemptsLeft--;
+                    this.totalAttempted++;
+                    
+                    // Save to review queue on mistake
+                    this.reviewQueue.add(this.currentQuestion.id);
+                    this.updateReviewBadge();
+
+                    // Shake animation & wrong style
+                    const card = document.getElementById('question-card');
+                    card.classList.add('shake');
+                    setTimeout(() => card.classList.remove('shake'), 500);
+
+                    buttonEl.className = "w-full p-4 rounded-xl text-left text-sm sm:text-base font-semibold bg-rose-950/40 text-rose-300 border border-rose-800/60 opacity-60 transition flex items-center justify-between pointer-events-none";
+                    buttonEl.querySelector('i').className = "fa-solid fa-circle-xmark text-rose-400 text-lg";
+
+                    document.getElementById('attempts-left').textContent = `Attempts left: ${this.attemptsLeft}`;
+
+                    if (this.attemptsLeft <= 0) {
+                        this.userAnswered = true;
+                        this.streak = 0;
+                        document.getElementById('attempts-left').textContent = "Out of attempts";
+                        document.getElementById('attempts-left').className = "font-medium text-rose-400";
+                        
+                        // Highlight correct button
+                        this.highlightCorrectAnswer();
+                        this.showExplanation();
+                        document.getElementById('btn-next').classList.remove('hidden');
+                    }
+
+                    this.updateStatsUI();
+                    this.saveToLocalStorage();
+                }
+            }
+
+            highlightCorrectAnswer() {
+                const buttons = document.querySelectorAll('.option-btn');
+                buttons.forEach(btn => {
+                    if (btn.dataset.word === this.currentQuestion.word) {
+                        btn.className = "w-full p-4 rounded-xl text-left text-sm sm:text-base font-semibold bg-emerald-950/80 text-emerald-200 border-2 border-emerald-500 transition flex items-center justify-between";
+                        btn.querySelector('i').className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+                    }
+                });
+            }
+
+            showHint() {
+                if (this.userAnswered) return;
+                // Reveal position / hint message
+                const hintText = `Hint: The correct word is a (${this.currentQuestion.pos}) starting with '${this.currentQuestion.word.charAt(0).toUpperCase()}'.`;
+                
+                // Temporary toast/banner inside sentence box
+                const sentenceBox = document.getElementById('sentence-box');
+                const existingHint = document.getElementById('hint-banner');
+                if(!existingHint) {
+                    const hintDiv = document.createElement('div');
+                    hintDiv.id = 'hint-banner';
+                    hintDiv.className = "mt-3 text-xs font-semibold text-amber-300 bg-amber-950/60 p-2.5 rounded-lg border border-amber-800/50 flex items-center space-x-2";
+                    hintDiv.innerHTML = `<i class="fa-solid fa-lightbulb"></i><span>${hintText}</span>`;
+                    sentenceBox.appendChild(hintDiv);
+                }
+            }
+
+            showExplanation() {
+                const panel = document.getElementById('explanation-panel');
+                panel.classList.remove('hidden');
+
+                document.getElementById('target-word-title').textContent = this.currentQuestion.word;
+                document.getElementById('target-word-pos').textContent = this.currentQuestion.pos;
+                document.getElementById('target-definition').textContent = this.currentQuestion.definition;
+
+                const exList = document.getElementById('target-examples');
+                exList.innerHTML = '';
+                this.currentQuestion.examples.forEach(ex => {
+                    const li = document.createElement('li');
+                    li.textContent = ex;
+                    exList.appendChild(li);
+                });
+
+                document.getElementById('target-essay-tip').textContent = this.currentQuestion.essayTip;
+            }
+
+            nextQuestion() {
+                this.currentIndex = (this.currentIndex + 1) % this.filteredQuestions.length;
+                this.renderQuestion();
+            }
+
+            toggleBookmarkCurrentWord() {
+                if (!this.currentQuestion) return;
+                const id = this.currentQuestion.id;
+                if (this.reviewQueue.has(id)) {
+                    this.reviewQueue.delete(id);
+                } else {
+                    this.reviewQueue.add(id);
+                }
+                const isBookmarked = this.reviewQueue.has(id);
+                document.getElementById('btn-bookmark').innerHTML = isBookmarked ? 
+                    '<i class="fa-solid fa-bookmark text-amber-400"></i>' : 
+                    '<i class="fa-regular fa-bookmark"></i>';
+                
+                this.updateReviewBadge();
+                this.saveToLocalStorage();
+            }
+
+            updateReviewBadge() {
+                document.getElementById('review-count-badge').textContent = this.reviewQueue.size;
+            }
+
+            updateStatsUI() {
+                document.getElementById('stat-streak').textContent = this.streak;
+                document.getElementById('stat-score').textContent = this.score;
+                document.getElementById('stat-mastered').textContent = this.masteredWords.size;
+
+                const accuracy = this.totalAttempted > 0 ? 
+                    Math.round((this.totalCorrect / this.totalAttempted) * 100) : 0;
+                document.getElementById('stat-accuracy').textContent = `${accuracy}%`;
+
+                this.updateReviewBadge();
+            }
+
+            // MODALS & DRAWER CONTROLS
+            toggleReviewModal(show) {
+                const modal = document.getElementById('modal-review');
+                if (show) {
+                    this.renderReviewList();
+                    modal.classList.remove('hidden');
+                } else {
+                    modal.classList.add('hidden');
+                }
+            }
+
+            renderReviewList() {
+                const container = document.getElementById('review-list-container');
+                container.innerHTML = '';
+
+                if (this.reviewQueue.size === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-10 text-slate-500">
+                            <i class="fa-regular fa-bookmark text-3xl mb-2"></i>
+                            <p class="text-sm">Your review queue is currently empty.</p>
+                            <p class="text-xs mt-1">Mistaken or bookmarked words will appear here for revision.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                this.reviewQueue.forEach(id => {
+                    const q = ACADEMIC_DATABASE.find(item => item.id === id);
+                    if (!q) return;
+
+                    const card = document.createElement('div');
+                    card.className = "bg-slate-900/90 border border-slate-700/80 p-4 rounded-xl space-y-2 relative";
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="font-bold text-lg text-emerald-400 capitalize">${q.word}</span>
+                                <span class="text-xs text-slate-400 italic">(${q.pos})</span>
+                                <span class="text-xs px-2 py-0.5 rounded bg-violet-500/10 text-violet-300 border border-violet-500/20">${q.level}</span>
+                            </div>
+                            <button onclick="app.removeFromReview('${q.id}')" class="text-slate-500 hover:text-rose-400 text-xs">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-200">${q.definition}</p>
+                        <div class="text-xs text-indigo-300 italic bg-indigo-950/40 p-2 rounded border border-indigo-900/40">
+                            <strong>Essay Tip:</strong> ${q.essayTip}
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            removeFromReview(id) {
+                this.reviewQueue.delete(id);
+                this.renderReviewList();
+                this.updateStatsUI();
+                this.saveToLocalStorage();
+            }
+
+            clearReviewQueue() {
+                this.reviewQueue.clear();
+                this.renderReviewList();
+                this.updateStatsUI();
+                this.saveToLocalStorage();
+            }
+
+            toggleBlueprintModal(show) {
+                const modal = document.getElementById('modal-blueprint');
+                if (show) modal.classList.remove('hidden');
+                else modal.classList.add('hidden');
+            }
+
+            resetToHome() {
+                this.currentIndex = 0;
+                this.renderQuestion();
+            }
+
+            // LOCAL STORAGE PERSISTENCE
+            saveToLocalStorage() {
+                const data = {
+                    score: this.score,
+                    streak: this.streak,
+                    totalAttempted: this.totalAttempted,
+                    totalCorrect: this.totalCorrect,
+                    masteredWords: Array.from(this.masteredWords),
+                    reviewQueue: Array.from(this.reviewQueue)
+                };
+                localStorage.setItem('academia_vocab_data', JSON.stringify(data));
+            }
+
+            loadFromLocalStorage() {
+                const saved = localStorage.getItem('academia_vocab_data');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        this.score = parsed.score || 0;
+                        this.streak = parsed.streak || 0;
+                        this.totalAttempted = parsed.totalAttempted || 0;
+                        this.totalCorrect = parsed.totalCorrect || 0;
+                        this.masteredWords = new Set(parsed.masteredWords || []);
+                        this.reviewQueue = new Set(parsed.reviewQueue || []);
+                    } catch (e) {
+                        console.error("Error loading saved progress", e);
+                    }
+                }
+            }
+        }
+
+        // Initialize Application
+        let app;
+        window.onload = function() {
+            app = new VocabApp();
+            app.init();
+        }
+    </script>
+</body>
+</html>
